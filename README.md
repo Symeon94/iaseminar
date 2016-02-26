@@ -1,2 +1,2 @@
-# iaseminar
+# IA Seminar
 IA Seminar UCL
