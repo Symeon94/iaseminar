@@ -6,8 +6,36 @@ public class MaxSP
 	/**
 	 * @param minsup minimum support in terms of line count
 	 */
-	public static void maxsp(List<Sequence> db, int minsup, Sequence p) {
-		int largestSupport;
+	public static int maxsp(List<Sequence> db, int minsup, Sequence p) {
+		int largestSupport = 0;
+		// Scan DB
+		HashMap<Integer, Integer> support = scan(db);
+		for(Integer item : support.keySet()) {
+			// If item support >= minsup
+			if(support.get(item) >= minsup) {
+				// MBE
+				if(!hasMaximalBackextension(db, item)) {
+					// Concatenate
+					Sequence ps = p.copy();
+					ps.append(item);
+					System.out.println(ps);
+					// Project Database with item i
+					List<Sequence> dbi = project(db, item);
+					// Recursive call 
+					int maxSupport = maxsp(dbi, minsup, ps);
+					if(maxSupport < minsup) {
+						System.out.println(ps);
+						int curSupport = getSupport();
+						if(curSupport > largestSupport)
+							largestSupport = curSupport;
+					}
+				}
+			}
+		}
+		return largestSupport;
+	}	
+	
+	public static void prefixSpan(List<Sequence> db, int minsup, Sequence p) {
 		// Scan DB
 		HashMap<Integer, Integer> support = scan(db);
 		for(Integer item : support.keySet()) {
@@ -20,10 +48,19 @@ public class MaxSP
 				// Project Database with item i
 				List<Sequence> dbi = project(db, item);
 				// Recursive call
-				maxsp(dbi, minsup, ps);
+				prefixSpan(dbi, minsup, ps);
 			}
 		}
 	}	
+	
+	private static int getSupport(List<Sequence> db, Sequence s) {
+		int sup = 0;
+		for(Sequence t : db) {
+			if(t.contains(s))
+				sup ++;
+		}
+		return sup;
+	}
 	
 	private static HashMap<Integer, Integer> scan(List<Sequence> db) {
 		HashMap<Integer, Integer> support = new HashMap<Integer, Integer>();
@@ -53,5 +90,9 @@ public class MaxSP
 			projected_db.add(s.project(item));
 		}
 		return projected_db;
+	}
+	
+	private static boolean hasMaximalBackextension(List<Sequence> db, int item) {
+		return false;
 	}
 }

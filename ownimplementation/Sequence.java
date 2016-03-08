@@ -83,4 +83,8 @@ public class Sequence
 		// TODO NOT SAGE
 		return new Sequence((LinkedList<Integer>)this.seq.clone());
 	}
+	
+	public boolean contains(Sequence s) {
+		// TODO
+	}
 }
