@@ -12,7 +12,8 @@ public class Sequence
 		this();
 		String[] data = seq.split(" ");
 		for(String txt : data)
-			this.seq.add(Integer.parseInt(txt));
+			if(!txt.equals("-1"))
+				this.seq.add(Integer.parseInt(txt));
 	}
 
 	public Sequence(int firstItem) {
