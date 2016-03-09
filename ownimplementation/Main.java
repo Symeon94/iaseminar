@@ -5,11 +5,11 @@ public class Main
 {
 	public static void main(String[] args) {
 		LinkedList<Sequence> seq = readDatabase("test.txt");
-		
-		MaxSP.maxsp(seq, (int)(seq.size() * 0.5), new Sequence());
-		
+
+		MaxSP.prefixSpan(seq, (int)(seq.size() * 0.5), new Sequence());
+
 	}
-	
+
 	public static LinkedList<Sequence> readDatabase(String path) {
 		LinkedList<Sequence> seq = new LinkedList<Sequence>();
 		BufferedReader file = null;

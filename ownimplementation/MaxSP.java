@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class MaxSP
-{	
+{
 	/**
 	 * @param minsup minimum support in terms of line count
 	 */
@@ -21,11 +21,12 @@ public class MaxSP
 					System.out.println(ps);
 					// Project Database with item i
 					List<Sequence> dbi = project(db, item);
-					// Recursive call 
+					// Recursive call
 					int maxSupport = maxsp(dbi, minsup, ps);
 					if(maxSupport < minsup) {
 						System.out.println(ps);
-						int curSupport = getSupport();
+						// TODO USE DB OR DBIR Might be an error
+						int curSupport = MaxSP.getSupport(dbi, ps);
 						if(curSupport > largestSupport)
 							largestSupport = curSupport;
 					}
@@ -33,8 +34,8 @@ public class MaxSP
 			}
 		}
 		return largestSupport;
-	}	
-	
+	}
+
 	public static void prefixSpan(List<Sequence> db, int minsup, Sequence p) {
 		// Scan DB
 		HashMap<Integer, Integer> support = scan(db);
@@ -51,8 +52,8 @@ public class MaxSP
 				prefixSpan(dbi, minsup, ps);
 			}
 		}
-	}	
-	
+	}
+
 	private static int getSupport(List<Sequence> db, Sequence s) {
 		int sup = 0;
 		for(Sequence t : db) {
@@ -61,7 +62,7 @@ public class MaxSP
 		}
 		return sup;
 	}
-	
+
 	private static HashMap<Integer, Integer> scan(List<Sequence> db) {
 		HashMap<Integer, Integer> support = new HashMap<Integer, Integer>();
 		LinkedList<Integer> alreadySeen = new LinkedList<Integer>();
@@ -83,7 +84,7 @@ public class MaxSP
 		}
 		return support;
 	}
-	
+
 	private static List<Sequence> project(List<Sequence> db, int item) {
 		List<Sequence> projected_db = new LinkedList<Sequence>();
 		for(Sequence s : db) {
@@ -91,7 +92,7 @@ public class MaxSP
 		}
 		return projected_db;
 	}
-	
+
 	private static boolean hasMaximalBackextension(List<Sequence> db, int item) {
 		return false;
 	}
