@@ -6,7 +6,7 @@ public class MaxSP
 	/**
 	 * @param minsup minimum support in terms of line count
 	 */
-	public static int maxsp(LinkedList<Sequence> db, int minsup, Sequence p) {
+	public static int maxsp(LinkedList<Sequence> originalDb, LinkedList<Sequence> db, int minsup, Sequence p) {
 		int largestSupport = 0;
 		// Scan DB
 		HashMap<Integer, Integer> support = scan(db);
@@ -14,13 +14,23 @@ public class MaxSP
 			// If item support >= minsup
 			int itemSupport = support.get(item);
 			if(itemSupport >= minsup) {
+				// Concatenate
+				Sequence ps = p.copy();
+				ps.append(item);
+				// Project Database with item i
+				LinkedList<Sequence> dbi = project(db, item);
+				int maxSupport = maxsp(originalDb, dbi, minsup, ps);
+				if(maxSupport < minsup) {
+					if(!hasMaximalBackextension(originalDb, ps.copy(), minsup)) {
+						System.out.println(ps);
+					}
+				}
+				// TODO GET SUPPORT SEQUENCE
+				int curSupport = MaxSP.getSupport(db, item);
+				if(curSupport > largestSupport)
+					largestSupport = curSupport;
 				// MBE TODO CHECK iTEMSUPPORT
-				if(!hasMaximalBackextension(db, item, itemSupport)) {
-					// Concatenate
-					Sequence ps = p.copy();
-					ps.append(item);
-					// Project Database with item i
-					LinkedList<Sequence> dbi = project(db, item);
+				/*if(!hasMaximalBackextension(db, item, minsup)) {
 					// Recursive call
 					int maxSupport = maxsp(dbi, minsup, ps);
 					if(maxSupport < minsup) {
@@ -30,7 +40,7 @@ public class MaxSP
 					int curSupport = MaxSP.getSupport(db, item);
 					if(curSupport > largestSupport)
 						largestSupport = curSupport;
-				}
+				}*/
 			}
 		}
 		return largestSupport;
@@ -97,34 +107,54 @@ public class MaxSP
 		return projected_db;
 	}
 
-	private static boolean hasMaximalBackextension(LinkedList<Sequence> db, int item, int minsup) {
-		// TODO don't create a new sequence
-		LinkedList<Sequence> reverseSequence = new LinkedList<Sequence>();
-		// Stop when we found an MBE
-		for(Sequence s : db) {
-			Sequence sCopy = s.copy();
-			boolean stop = false;
-			while(!stop) {
-				if(sCopy.getSize() == 0)
-					stop = true;
-				else if(sCopy.getSequence().pollLast() == item) {
-					stop = true;
-					reverseSequence.add(sCopy);
-				}
-			}
+	private static LinkedList<Sequence> project(LinkedList<Sequence> db, Sequence s) {
+		Sequence copy = s.copy();
+		LinkedList<Sequence> res = db;
+		while(copy.getSize() > 0) {
+			res = project(res, copy.getSequence().pop());
 		}
-		/* TODO for(Sequence sss : db)
-			System.out.println("B" + item + sss);
-		for(Sequence sss : reverseSequence)
-			System.out.println("A" + item + sss);*/
-		// Get support for periods
-		HashMap<Integer, Integer> support = scan(reverseSequence);
-		for(Integer ite : support.keySet()) {
-			// TODO System.out.println(ite + " -> Sup: " + support.get(ite));
-			// If item support >= minsup
-			if(support.get(ite) >= minsup)
+		return res;
+	}
+
+	/**
+	 * Recursive function, starts with i = size-1 to 0
+	 * @post Sequence s WILL be modified
+	 */
+	private static boolean hasMaximalBackextension(LinkedList<Sequence> db, Sequence s, int minsup) {
+		// Get last item
+		int lastItem = s.getSequence().pollLast();
+		// Find LLn
+		LinkedList<Sequence> newDb = new LinkedList<Sequence>();
+		for(Sequence seq : db)
+			newDb.add(lastInLast(seq, lastItem));
+		// Project P_{n-1} on the DB
+		LinkedList<Sequence> projectedDb = project(newDb, s);
+		// Calculate support
+		HashMap<Integer, Integer> support = scan(projectedDb);
+		// If we find max period return true
+		for(Integer key : support.keySet()) {
+			if(support.get(key) >= minsup)
 				return true;
 		}
+		// If a sequence to see recall maxback extension
+		if(s.getSize() > 0)
+			return hasMaximalBackextension(newDb, s, minsup);
 		return false;
+	}
+
+	/**
+	 * Find Last in Last element and remove the other
+	 * Example: ABCDCDAC with item D ==> ABCDC
+	 */
+	private static Sequence lastInLast(Sequence s, int item) {
+		Sequence copy = s.copy();
+		boolean stop = false;
+		while(!stop) {
+			if(copy.getSize() == 0)
+				stop = true;
+			else if(copy.getSequence().pollLast() == item)
+				stop = true;
+		}
+		return copy;
 	}
 }

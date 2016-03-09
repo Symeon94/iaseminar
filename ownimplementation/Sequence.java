@@ -43,14 +43,6 @@ public class Sequence
 		seq.add(i);
 	}
 
-	/**
-	 * Remove all items until you find i
-	 * Example ABCD removeTo(B) => CD
-	 */
-	public void removeTo(int i) {
-		// TODO
-	}
-
 	public LinkedList<Integer> getSequence() {
 		return seq;
 	}
