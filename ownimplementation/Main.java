@@ -4,12 +4,8 @@ import java.util.*;
 public class Main
 {
 	public static void main(String[] args) {
-		LinkedList<Sequence> seq = readDatabase("test.txt");
-
-		System.out.println("prefixSpan");
-		MaxSP.prefixSpan(seq, (int)(seq.size() * 0.75), new Sequence());
-		System.out.println("maxsp");
-		MaxSP.maxsp(seq, seq, (int)(seq.size() * 0.75), new Sequence());
+		LinkedList<Sequence> seq = readDatabase(args[0]);
+		MaxSP.maxsp(seq, seq, (int)(seq.size() * Integer.parseInt(args[1])/100.0), new Sequence());
 	}
 
 	public static LinkedList<Sequence> readDatabase(String path) {

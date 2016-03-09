@@ -50,13 +50,11 @@ public class Sequence
 
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append('<');
 		for(Integer i : seq) {
-			if(buffer.length() != 1)
-				buffer.append(' ');
+			if(buffer.length() != 0)
+				buffer.append(" -1 ");
 			buffer.append(i);
 		}
-		buffer.append('>');
 		return buffer.toString();
 	}
 
