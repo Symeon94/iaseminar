@@ -6,8 +6,10 @@ public class Main
 	public static void main(String[] args) {
 		LinkedList<Sequence> seq = readDatabase("test.txt");
 
+		System.out.println("prefixSpan");
 		MaxSP.prefixSpan(seq, (int)(seq.size() * 0.5), new Sequence());
-
+		System.out.println("maxsp");
+		MaxSP.maxsp(seq, (int)(seq.size() * 0.5), new Sequence());
 	}
 
 	public static LinkedList<Sequence> readDatabase(String path) {

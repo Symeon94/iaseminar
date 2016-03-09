@@ -15,6 +15,11 @@ public class Sequence
 			this.seq.add(Integer.parseInt(txt));
 	}
 
+	public Sequence(int firstItem) {
+		this();
+		seq.add(firstItem);
+	}
+
 	public Sequence(LinkedList<Integer> seq) {
 		this.seq = seq;
 	}
@@ -87,22 +92,28 @@ public class Sequence
 	public boolean contains(Sequence s) {
 		if(s.getSize() > this.getSize())
 			return false;
-		for(Iterator<Integer> it = this.seq.iterator() ; it.hasNext() ; ) {
+		for(ListIterator<Integer> it = (ListIterator<Integer>)this.seq.iterator() ; it.hasNext() ; ) {
 			int item = it.next();
 			if(item == s.getSequence().get(0)) {
 				// Can we iterate
-				if(contains(s, (Iterator<Integer>)it.clone()))
+				ListIterator<Integer> newIt = this.seq.listIterator(it.nextIndex());
+				if(contains(s, newIt))
 					return true;
 			}
 		}
 		return false;
 	}
 
-	private boolean contains(Sequence s, Iterator<Integer> it) {
-		for(Integer item : s) {
+	private boolean contains(Sequence s, ListIterator<Integer> it) {
+		Iterator<Integer> it2 = s.getSequence().iterator();
+		if(!it2.hasNext())
+			return true;
+		it2.next();
+
+		while(it2.hasNext()) {
 			if(!it.hasNext())
 				return false;
-			if(item != it.next())
+			if(it2.next() != it.next())
 				return false;
 		}
 		return true;
