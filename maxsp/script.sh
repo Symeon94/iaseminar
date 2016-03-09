@@ -1,1 +1,1 @@
-java -jar spmf.jar run MaxSP ../ownimplementation/text.txt out.txt 50%
+java -jar spmf.jar run MaxSP out.txt out2.txt 50%

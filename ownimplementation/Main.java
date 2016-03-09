@@ -4,8 +4,10 @@ import java.util.*;
 public class Main
 {
 	public static void main(String[] args) {
+		long time = System.currentTimeMillis();
 		LinkedList<Sequence> seq = readDatabase(args[0]);
 		MaxSP.maxsp(seq, seq, (int)(seq.size() * Integer.parseInt(args[1])/100.0), new Sequence());
+		System.out.println(System.currentTimeMillis()-time);
 	}
 
 	public static LinkedList<Sequence> readDatabase(String path) {

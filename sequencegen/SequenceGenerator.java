@@ -12,9 +12,9 @@ public class SequenceGenerator
 				int up = 15 + (int)(Math.random()*29);
 				for(int j = 0 ; j < up ; j++) {
 					write.write("" + ((int)(Math.random()*8) + 1));
-					if(j != up-1)
-						write.write(" -1 ");
+					write.write(" -1 ");
 				}
+				write.write("-2");
 				write.newLine();
 			}
 			write.close();
